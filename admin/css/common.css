@@ -1,0 +1,77 @@
+:root{
+    --teal: #2ec1ac;
+    --teal_hover: #279e8c; 
+}
+
+*{
+    font-family: 'Poppins', sans-serif;
+}
+.h-font{
+    font-family: 'Merienda', cursive;
+}
+/* Chrome, Safari, Edge, Opera*/
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button{
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/*Firefox*/ 
+/* input[type=number]{
+    -moz-appearance: textfield;
+} */
+.card {
+    border-radius: 0.25rem;
+    border: none;
+}
+
+.card-title {
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+.custom-bg {
+    background-color: var(--teal) !important;
+    border: 1px solid var(--teal) !important;
+}
+
+.custom-bg:hover {
+    background-color: var(--teal_hover) !important;
+}
+
+.availability-form{
+    margin-top: -50px;
+    z-index: 2;
+    position: relative;
+}
+
+.h-line{
+    width: 150px;
+    margin: 0 auto;
+    height: 1.7px;
+}
+
+.custom-alert{
+    position: fixed;
+    top: 80px;
+    right: 25px;
+    z-index: 1111;
+}
+
+#dashboard-menu{
+    position: fixed;
+    height: 100%;
+    z-index: 11;
+}
+
+
+@media screen and (max-width: 992px) {
+    #dashboard-menu{
+    height: auto;
+    width: 100%;
+}
+#main-content{
+    margin-top: 60px;
+}
+    
+}
