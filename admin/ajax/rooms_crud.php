@@ -12,6 +12,7 @@
     $frm_data = filteration($_POST);
     $flag = 0;
 
+    // Insert room data into 'rooms' table
     $q1 = "INSERT INTO `rooms` (`name`, `area`, `price`, `quantity`, `adult`, `children`, `description`) VALUES (?,?,?,?,?,?,?)";
     $values = [$frm_data['name'],$frm_data['area'],$frm_data['price'],$frm_data['quantity'],$frm_data['adult'],$frm_data['children'],$frm_data['desc']];
 
@@ -21,6 +22,7 @@
 
     $room_id = mysqli_insert_id($con);
 
+    // Insert facilities into 'room_facilities' table
     $q2 = "INSERT INTO `room_facilities` (`room_id`, `facilities_id`) VALUES (?,?)";
     if($stmt = mysqli_prepare($con,$q2))
     {
@@ -34,6 +36,7 @@
       $flag = 0;
     }
 
+    // Insert features into 'room_features' table
     $q3 = "INSERT INTO `room_features` (`room_id`, `features_id`) VALUES (?,?)";
     if($stmt = mysqli_prepare($con,$q3))
     {
@@ -53,12 +56,14 @@
     else {
       echo 0;
     }
+
   }
 
   if(isset($_POST['get_all_rooms']))
   {
     $res = select("SELECT * FROM `rooms` WHERE `removed`=?", [0], 'i');
     $i = 1;
+
     $data = "";
 
     while($row = mysqli_fetch_assoc($res))
@@ -70,14 +75,19 @@
         $status = "<button onclick='toggle_status($row[id],1)' class='btn btn-warning btn-sm shadow-none'>inactive</button>";
       }
 
+
       $data.="
         <tr class='align-middle'>
           <td>$i</td>
           <td>$row[name]</td>
           <td>$row[area] sq. ft.</td>
           <td>
-            <span class='badge rounded-pill bg-light text-dark'>Adult: $row[adult]</span><br>
-            <span class='badge rounded-pill bg-light text-dark'>Children: $row[children]</span>
+            <span class='badge rounded-pill bg-light text-dark'>
+              Adult: $row[adult]
+            </span><br>
+            <span class='badge rounded-pill bg-light text-dark'>
+              Children: $row[children]
+            </span>
           </td>
           <td>₹$row[price]</td>
           <td>$row[quantity]</td>
@@ -97,83 +107,8 @@
       ";
       $i++;
     }
+
     echo $data;
-  }
-
-  // --- NEW: FETCH ROOM DATA FOR EDIT MODAL ---
-  if(isset($_POST['get_room']))
-  {
-    $frm_data = filteration($_POST);
-
-    $res1 = select("SELECT * FROM `rooms` WHERE `id`=?", [$frm_data['get_room']], 'i');
-    $res2 = select("SELECT * FROM `room_features` WHERE `room_id`=?", [$frm_data['get_room']], 'i');
-    $res3 = select("SELECT * FROM `room_facilities` WHERE `room_id`=?", [$frm_data['get_room']], 'i');
-
-    $roomdata = mysqli_fetch_assoc($res1);
-    $features = [];
-    $facilities = [];
-
-    if(mysqli_num_rows($res2)>0){
-      while($row = mysqli_fetch_assoc($res2)){
-        array_push($features,$row['features_id']);
-      }
-    }
-
-    if(mysqli_num_rows($res3)>0){
-      while($row = mysqli_fetch_assoc($res3)){
-        array_push($facilities,$row['facilities_id']);
-      }
-    }
-
-    $data = ["roomdata" => $roomdata, "features" => $features, "facilities" => $facilities];
-    echo json_encode($data);
-  }
-
-  // --- NEW: UPDATE ROOM DATA ---
-  if(isset($_POST['edit_room']))
-  {
-    $features = json_decode($_POST['features']);
-    $facilities = json_decode($_POST['facilities']);
-    $frm_data = filteration($_POST);
-    $flag = 0;
-
-    $q1 = "UPDATE `rooms` SET `name`=?,`area`=?,`price`=?,`quantity`=?,`adult`=?,`children`=?,`description`=? WHERE `id`=?";
-    $values = [$frm_data['name'],$frm_data['area'],$frm_data['price'],$frm_data['quantity'],$frm_data['adult'],$frm_data['children'],$frm_data['desc'],$frm_data['room_id']];
-
-    if(update($q1,$values,'siiiiisi')){
-      $flag = 1;
-    }
-
-    // Delete existing links then re-insert to update many-to-many relationship
-    $del_features = delete("DELETE FROM `room_features` WHERE `room_id`=?", [$frm_data['room_id']], 'i');
-    $del_facilities = delete("DELETE FROM `room_facilities` WHERE `room_id`=?", [$frm_data['room_id']], 'i');
-
-    if(!($del_features && $del_facilities)){
-      $flag = 0;
-    }
-
-    $q2 = "INSERT INTO `room_facilities` (`room_id`, `facilities_id`) VALUES (?,?)";
-    if($stmt = mysqli_prepare($con,$q2)) {
-      foreach($facilities as $f){
-        mysqli_stmt_bind_param($stmt,'ii',$frm_data['room_id'],$f);
-        mysqli_stmt_execute($stmt);
-      }
-      $flag = 1;
-      mysqli_stmt_close($stmt);
-    }
-
-    $q3 = "INSERT INTO `room_features` (`room_id`, `features_id`) VALUES (?,?)";
-    if($stmt = mysqli_prepare($con,$q3)) {
-      foreach($features as $f){
-        mysqli_stmt_bind_param($stmt,'ii',$frm_data['room_id'],$f);
-        mysqli_stmt_execute($stmt);
-      }
-      $flag = 1;
-      mysqli_stmt_close($stmt);
-    }
-
-    if($flag){ echo 1; }
-    else { echo 0; }
   }
 
   if(isset($_POST['toggle_status']))
@@ -189,6 +124,8 @@
       echo 0;
     }
   }
+
+  // --- NEW ADDITIONS BELOW ---
 
   if(isset($_POST['add_image']))
   {
@@ -213,6 +150,7 @@
   {
     $frm_data = filteration($_POST);
     $res = select("SELECT * FROM `room_images` WHERE `room_id`=?", [$frm_data['get_room_images']], 'i');
+    
     $path = ROOMS_IMG_PATH;
 
     while($row = mysqli_fetch_assoc($res))
@@ -283,12 +221,12 @@
       deleteImage($row['image'], ROOMS_FOLDER);
     }
 
-    delete("DELETE FROM `room_images` WHERE `room_id`=?", [$frm_data['room_id']], 'i');
-    delete("DELETE FROM `room_features` WHERE `room_id`=?", [$frm_data['room_id']], 'i');
-    delete("DELETE FROM `room_facilities` WHERE `room_id`=?", [$frm_data['room_id']], 'i');
+    $res2 = delete("DELETE FROM `room_images` WHERE `room_id`=?", [$frm_data['room_id']], 'i');
+    $res3 = delete("DELETE FROM `room_features` WHERE `room_id`=?", [$frm_data['room_id']], 'i');
+    $res4 = delete("DELETE FROM `room_facilities` WHERE `room_id`=?", [$frm_data['room_id']], 'i');
     $res5 = update("UPDATE `rooms` SET `removed`=? WHERE `id`=?", [1, $frm_data['room_id']], 'ii');
 
-    if($res5){
+    if($res2 || $res3 || $res4 || $res5){
       echo 1;
     } else {
       echo 0;

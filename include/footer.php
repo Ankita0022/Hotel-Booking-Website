@@ -19,23 +19,24 @@
             <div class="col-lg-4 p-4">
                 <h5 class="mb-3">Follow us</h5>
                 <?php 
-                    if($contact_r['tw']!=''){
+                    $contact_r = $contact_r ?? ['tw' => '', 'fb' => '', 'insta' => ''];
+                    if(!empty($contact_r['tw'])){
                         echo<<<data
-                        <a href="$contact_r[tw]" class="d-inline-block text-dark text-decoration-none mb-2">
+                        <a href="{$contact_r['tw']}" class="d-inline-block text-dark text-decoration-none mb-2">
                             <i class="bi bi-twitter me-1"></i>Twitter
                         </a>
                         data;
+                        echo '<br>';
+                    }
+                    if(!empty($contact_r['fb'])){
+                        echo '<a href="' . $contact_r['fb'] . '" class="d-inline-block text-dark text-decoration-none mb-2">';
+                        echo '<i class="bi bi-facebook me-1"></i>Facebook</a><br>';
+                    }
+                    if(!empty($contact_r['insta'])){
+                        echo '<a href="' . $contact_r['insta'] . '" class="d-inline-block text-dark text-decoration-none">';
+                        echo '<i class="bi bi-instagram me-1"></i>Instagram</a>';
                     }
                 ?>
-                  
-                <br>
-                <a href="<?php echo $contact_r['fb'] ?>" class="d-inline-block text-dark text-decoration-none mb-2">
-                    <i class="bi bi-facebook me-1"></i>Facebook
-                </a>
-                <br>
-                <a href="<?php echo $contact_r['insta'] ?>" class="d-inline-block text-dark text-decoration-none">
-                    <i class="bi bi-instagram me-1"></i>Instagram
-                </a>
             </div>
         </div>
      </div>
@@ -59,4 +60,88 @@
             }
         }
         setActive();
-    </script>
+
+        function alert(type, msg) {
+            let bs_class = (type == 'success') ? 'alert-success' : 'alert-danger';
+            let element = document.createElement('div');
+            element.innerHTML = `
+                <div class="alert ${bs_class} alert-dismissible fade show custom-alert" role="alert" style="position: fixed; top: 80px; right: 25px; z-index: 1111;">
+                    <strong class="me-3">${msg}</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            `;
+            document.body.append(element);
+            setTimeout(() => element.remove(), 3000);
+        }
+
+        // --- REGISTER  ---
+{            let register_form = document.getElementById('register-form');
+
+            // ONLY run this if the form exists (Guard)
+            if (register_form) {
+                register_form.addEventListener('submit', (e) => {
+                    e.preventDefault();
+
+                    let data = new FormData(register_form);
+                    data.append('register', '');
+
+                    let xhr = new XMLHttpRequest();
+                    xhr.open("POST", "ajax/login_register.php", true);
+
+                    xhr.onload = function() {
+                        if (this.responseText == 'pass_mismatch') {
+                            alert('error', "Passwords do not match!");
+                        } else if (this.responseText == 'email_already') {
+                            alert('error', "Email already registered!");
+                        } else if (this.responseText == 'phone_already') {
+                            alert('error', "Phone number already registered!");
+                        } else if (this.responseText == 'inv_img') {
+                            alert('error', "Only JPG, WEBP & PNG allowed!");
+                        } else if (this.responseText == 'upd_failed') {
+                            alert('error', "Image upload failed!");
+                        } else if (this.responseText == 'ins_failed') {
+                            alert('error', "Registration failed!");
+                        } else if (this.responseText.trim() == '1') {
+                            alert('success', "Registration successful!");
+                            register_form.reset();
+                            // Close modal
+                            bootstrap.Modal.getInstance(document.getElementById('registerModal')).hide();
+                        }
+                    }
+                    xhr.send(data);
+                });
+            }
+
+            // --- LOGIN LOGIC ---
+            let login_form = document.getElementById('login-form');
+
+            // ONLY run this if the form exists (Guard)
+            if (login_form) {
+                login_form.addEventListener('submit', (e) => {
+                    e.preventDefault();
+
+                    let data = new FormData(login_form);
+                    data.append('login', '');
+
+                    let xhr = new XMLHttpRequest();
+                    xhr.open("POST", "ajax/login_register.php", true);
+
+                    xhr.onload = function() {
+                    if (this.responseText == 'pass_mismatch') {
+                        alert('error', "Passwords do not match!");
+                    } else if (this.responseText == 'email_already') {
+                        alert('error', "Email already registered!");
+                    } else if (this.responseText == 'phone_already') {
+                        alert('error', "Phone number already registered!");
+                    } 
+                    // ... (other error checks) ...
+                    else if (this.responseText.trim() == '1') {
+                        // Since user is now logged in automatically, refresh the page
+                        window.location = window.location.pathname;
+                    }
+                }
+                    xhr.send(data);
+                });
+            }}
+</script>
+

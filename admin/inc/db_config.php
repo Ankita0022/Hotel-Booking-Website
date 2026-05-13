@@ -1,7 +1,7 @@
 <?php 
 
 // Database configuration
-$hname = "localhost"; 
+$hname = "localhost:3307"; 
 $uname = "root"; 
 $pass = ""; 
 $db_name = "hbwebsite"; 
