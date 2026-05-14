@@ -1,0 +1,129 @@
+:root {
+    --teal: #2ec1ac;
+    --teal_hover: #279e8c;
+    --sidebar-width: 200px;
+    --collapsed-width: 80px;
+    --dark-bg: #212529;
+}
+
+/* Page Entrance Animation */
+body {
+    background-color: #f8f9fa;
+    animation: fadeIn 0.6s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+* {
+    font-family: 'Poppins', sans-serif;
+}
+
+.h-font {
+    font-family: 'Merienda', cursive;
+}
+
+#dashboard-menu {
+    position: fixed;
+    height: 100%;
+    z-index: 11;
+    background-color: var(--dark-bg) !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 4px 0 10px rgba(0,0,0,0.1);
+}
+
+#dashboard-menu.collapsed {
+    width: var(--collapsed-width);
+}
+
+#dashboard-menu.collapsed .nav-link span,
+#dashboard-menu.collapsed h4 {
+    display: none; /* Hide text, keep icons */
+}
+
+#dashboard-menu.collapsed .nav-link {
+    justify-content: center;
+    text-align: center;
+    padding: 15px 0;
+}
+
+#dashboard-menu.collapsed .nav-link i {
+    margin: 0 !important;
+    font-size: 1.5rem;
+}
+
+/* Main Content: Prevents overlapping and adds smooth movement */
+#main-content {
+    margin-left: var(--sidebar-width);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    min-height: 100vh;
+    padding: 30px;
+}
+
+#main-content.expanded {
+    margin-left: var(--collapsed-width);
+}
+
+/* Aesthetic Cards with Hover Animation */
+.card {
+    border-radius: 15px;
+    border: none;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+}
+
+.card-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+/* Modern Gradients for Dashboard Stats */
+.bg-gradient-teal {
+    background: linear-gradient(135deg, #2ec1ac 0%, #1a9381 100%);
+    color: white;
+}
+
+.bg-gradient-dark {
+    background: linear-gradient(135deg, #434343 0%, #000000 100%);
+    color: white;
+}
+
+/* Buttons and Alerts */
+.custom-bg {
+    background-color: var(--teal) !important;
+    border: 1px solid var(--teal) !important;
+    color: white !important;
+}
+
+.custom-bg:hover {
+    background-color: var(--teal_hover) !important;
+}
+
+.custom-alert {
+    position: fixed;
+    top: 80px;
+    right: 25px;
+    z-index: 1111;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 992px) {
+    #dashboard-menu {
+        width: 100% !important;
+        height: auto;
+        position: relative;
+    }
+    #main-content {
+        margin-left: 0 !important;
+    }
+}
