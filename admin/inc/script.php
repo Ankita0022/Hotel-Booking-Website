@@ -40,7 +40,7 @@ function toggleSidebar() {
     const mainContent = document.getElementById('main-content');
     
     sidebar.classList.toggle('collapsed');
-    mainContent.classList.toggle('expanded');
+    if(mainContent) mainContent.classList.toggle('expanded');
 
     if (sidebar.classList.contains('collapsed')) {
         localStorage.setItem('sidebarStatus', 'collapsed');
@@ -55,8 +55,8 @@ function checkSidebarState() {
     const status = localStorage.getItem('sidebarStatus');
 
     if (status === 'collapsed') {
-        sidebar.classList.add('collapsed');
-        mainContent.classList.add('expanded');
+        if(sidebar) sidebar.classList.add('collapsed');
+        if(mainContent) mainContent.classList.add('expanded');
     }
 }
 

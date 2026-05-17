@@ -20,7 +20,7 @@
 
   <div class="container-fluid" id="main-content">
     <div class="row">
-      <div class="col-lg-10 ms-auto p-4 overflow-hidden">
+      <div class="col-lg-12 p-4 overflow-hidden">
         <h3 class="mb-4">CAROUSEL</h3>
 
 
@@ -58,10 +58,10 @@
                 </div>
               </div>
               <div class="modal-footer">
-                <button type="button" onclick="carousel_picture.value=''" class="btn text-secondary shadow-none" data-bs-dismiss="modal">Cancel</button>
-                <button type="submit" class="btn custom-bg text-white shadow-none">Save</button>
-              </div>
+                <button type="reset" class="btn text-secondary shadow-none" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-primary text-white shadow-none">Save</button>
             </div>
+            </div>     
             </form>
           </div>
         </div>

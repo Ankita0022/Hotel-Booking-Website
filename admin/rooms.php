@@ -17,9 +17,9 @@
 
     <div class="container-fluid" id="main-content">
       <div class="row">
-        <div class="col-lg-10 ms-auto p-4 overflow-hidden">
+        <div class="col-lg-12 p-4 overflow-hidden"> 
           <h3 class="mb-4">ROOMS</h3>
-
+          
           <div class="card border-0 shadow-sm mb-4">
             <div class="card-body">
 
@@ -29,11 +29,11 @@
                 </button>
               </div>
 
-              <div class="table-responsive-lg" style="height: 450px; overflow-y: scroll;">
+              <div class="table-responsive-lg"> 
                 <table class="table table-hover border text-center">
                   <thead>
                     <tr class="bg-dark text-light sticky-top">
-                      <th scope="col">#</th>
+                      <th scope="col">UUID</th>
                       <th scope="col">Name</th>
                       <th scope="col">Area</th>
                       <th scope="col">Guests</th>
@@ -44,8 +44,15 @@
                     </tr>
                   </thead>
                   <tbody id="room-data">
-                  </tbody>
+                    </tbody>
                 </table>
+              </div>
+
+              <div class="d-flex align-items-center justify-content-end mt-3">
+                <nav aria-label="Page navigation example">
+                  <ul class="pagination mb-0" id="table-pagination">
+                    </ul>
+                </nav>
               </div>
 
             </div>
@@ -55,7 +62,6 @@
       </div>
     </div>
 
-    <!-- Add Room Modal -->
     <div class="modal fade" id="add-room" data-bs-backdrop="static" data-bs-keyboard="true" tabindex="-1">
       <div class="modal-dialog modal-lg">
         <form id="add_room_form" autocomplete="off">
@@ -133,14 +139,13 @@
             </div>
             <div class="modal-footer">
               <button type="reset" class="btn text-secondary shadow-none" data-bs-dismiss="modal">Cancel</button>
-              <button type="submit" class="btn custom-bg text-white shadow-none">Save</button>
-            </div>
+              <button type="submit" class="btn btn-primary text-white shadow-none">Save</button>
+          </div>
           </div>
         </form>
       </div>
     </div>
 
-    <!-- Room Images Modal -->
     <div class="modal fade" id="room-images" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -230,15 +235,17 @@
         xhr.send(data);
       }
 
-      function get_all_rooms() {
+      function get_all_rooms(page=1) {
         let xhr = new XMLHttpRequest();
         xhr.open("POST", "ajax/rooms_crud.php", true);
         xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 
         xhr.onload = function() {
-          document.getElementById('room-data').innerHTML = this.responseText;
+          let data = JSON.parse(this.responseText);
+          document.getElementById('room-data').innerHTML = data.table_data;
+          document.getElementById('table-pagination').innerHTML = data.pagination;
         }
-        xhr.send('get_all_rooms');
+        xhr.send('get_all_rooms&page=' + page);
       }
 
       function toggle_status(id, val) {

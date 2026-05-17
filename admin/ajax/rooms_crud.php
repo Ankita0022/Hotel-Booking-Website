@@ -61,45 +61,41 @@
 
   if(isset($_POST['get_all_rooms']))
   {
-    $res = select("SELECT * FROM `rooms` WHERE `removed`=?", [0], 'i');
-    $i = 1;
+    $frm_data = filteration($_POST);
 
-    $data = "";
+    $limit = 5; 
+    $page = isset($frm_data['page']) ? $frm_data['page'] : 1;
+    $start = ($page - 1) * $limit;
+
+    $total_q = mysqli_query($con, "SELECT COUNT(*) as total FROM `rooms` WHERE `removed`=0");
+    $total_res = mysqli_fetch_assoc($total_q);
+    $total_pages = ceil($total_res['total'] / $limit);
+
+    $res = select("SELECT * FROM `rooms` WHERE `removed`=? ORDER BY `id` DESC LIMIT $start, $limit", [0], 'i');
+    
+    $i = $start + 1;
+    $table_data = "";
 
     while($row = mysqli_fetch_assoc($res))
     {
-      if($row['status']==1){
-        $status = "<button onclick='toggle_status($row[id],0)' class='btn btn-dark btn-sm shadow-none'>active</button>";
-      }
-      else{
-        $status = "<button onclick='toggle_status($row[id],1)' class='btn btn-warning btn-sm shadow-none'>inactive</button>";
-      }
+      $status = ($row['status']==1) 
+        ? "<button onclick='toggle_status($row[id],0)' class='btn btn-dark btn-sm shadow-none'>active</button>"
+        : "<button onclick='toggle_status($row[id],1)' class='btn btn-warning btn-sm shadow-none'>inactive</button>";
 
-
-      $data.="
+      $table_data.="
         <tr class='align-middle'>
           <td>$i</td>
           <td>$row[name]</td>
           <td>$row[area] sq. ft.</td>
-          <td>
-            <span class='badge rounded-pill bg-light text-dark'>
-              Adult: $row[adult]
-            </span><br>
-            <span class='badge rounded-pill bg-light text-dark'>
-              Children: $row[children]
-            </span>
-          </td>
+          <td>Adult: $row[adult]<br>Children: $row[children]</td>
           <td>₹$row[price]</td>
           <td>$row[quantity]</td>
           <td>$status</td>
           <td>
-            <button type='button' onclick='edit_details($row[id])' class='btn btn-primary shadow-none btn-sm' data-bs-toggle='modal' data-bs-target='#edit-room'>
-              <i class='bi bi-pencil-square'></i>
-            </button>
-            <button type='button' onclick=\"room_images($row[id],'$row[name]')\" class='btn btn-info shadow-none btn-sm text-white' data-bs-toggle='modal' data-bs-target='#room-images'>
+            <button onclick=\"room_images($row[id],'$row[name]')\" class='btn btn-info shadow-none btn-sm text-white' data-bs-toggle='modal' data-bs-target='#room-images'>
               <i class='bi bi-images'></i>
             </button>
-            <button type='button' onclick='remove_room($row[id])' class='btn btn-danger shadow-none btn-sm'>
+            <button onclick='remove_room($row[id])' class='btn btn-danger shadow-none btn-sm'>
               <i class='bi bi-trash'></i>
             </button>
           </td>
@@ -107,8 +103,24 @@
       ";
       $i++;
     }
+    
+    $pagination = "";
+    if($total_pages > 1) {
+        $disabled = ($page <= 1) ? "disabled" : "";
+        $prev = $page - 1;
+        $pagination .= "<li class='page-item $disabled'><button onclick='get_all_rooms($prev)' class='page-link shadow-none'>&laquo;</button></li>";
 
-    echo $data;
+        for($p=1; $p<=$total_pages; $p++) {
+            $active = ($p == $page) ? "active" : "";
+            $pagination .= "<li class='page-item $active'><button onclick='get_all_rooms($p)' class='page-link shadow-none'>$p</button></li>";
+        }
+
+        $disabled = ($page >= $total_pages) ? "disabled" : "";
+        $next = $page + 1;
+        $pagination .= "<li class='page-item $disabled'><button onclick='get_all_rooms($next)' class='page-link shadow-none'>&raquo;</button></li>";
+    }
+
+    echo json_encode(["table_data" => $table_data, "pagination" => $pagination]);
   }
 
   if(isset($_POST['toggle_status']))

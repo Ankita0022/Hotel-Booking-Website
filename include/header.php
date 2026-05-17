@@ -12,6 +12,17 @@
     $settings_r = mysqli_fetch_assoc(select($settings_q,$values,'i'));
 ?>
 
+<?php 
+    // Assuming $settings_r is already fetched from the 'settings' table
+    if($settings_r['shutdown']){
+        echo<<<data
+            <div class='bg-danger text-center p-2 fw-bold text-white'>
+                <i class="bi bi-exclamation-triangle-fill"></i>
+                Bookings are temporarily closed!
+            </div>
+        data;
+    }
+?>
 
 <!-- navbar -->
 <nav id="nav-bar" class="navbar navbar-expand-lg navbar-light bg-white px-lg-3 py-lg-2 shadow-sm sticky-top">

@@ -112,34 +112,35 @@
                 });
             }
 
-            // --- LOGIN LOGIC ---
+            // --- LOGIN ---
             let login_form = document.getElementById('login-form');
 
+            if (login_form) {
                 login_form.addEventListener('submit', (e) => {
                     e.preventDefault();
-                    let data = new FormData();
-                    data.append('email_mob', login_form.elements['email_mob'].value);
-                    data.append('pass', login_form.elements['pass'].value);
+
+                    let data = new FormData(login_form);
                     data.append('login', '');
 
                     let xhr = new XMLHttpRequest();
                     xhr.open("POST", "ajax/login_register.php", true);
+
                     xhr.onload = function() {
-                        if (this.responseText == 'inv_email_mob') {
-                            alert('error', "Invalid Email or Mobile Number!");
-                        } else if (this.responseText == 'not_verified') {
-                            alert('error', "Email is not verified!");
-                        } else if (this.responseText == 'inactive') {
-                            alert('error', "Account Suspended! Please contact admin.");
-                        } else if (this.responseText == 'invalid_pass') {
-                            alert('error', "Incorrect Password!");
-                        } else if (this.responseText == 1) {
-                            // SUCCESSFUL REDIRECTION
-                            window.location = window.location.pathname; 
-                        }
+                    if (this.responseText == 'pass_mismatch') {
+                        alert('error', "Passwords do not match!");
+                    } else if (this.responseText == 'email_already') {
+                        alert('error', "Email already registered!");
+                    } else if (this.responseText == 'phone_already') {
+                        alert('error', "Phone number already registered!");
+                    } 
+                    // ... (other error checks) ...
+                    else if (this.responseText.trim() == '1') {
+                        // Since user is now logged in automatically, refresh the page
+                        window.location = window.location.pathname;
                     }
+                }
                     xhr.send(data);
                 });
-}
+            }}
 </script>
 

@@ -20,7 +20,7 @@
 
   <div class="container-fluid" id="main-content">
     <div class="row">
-      <div class="col-lg-10 ms-auto p-4 overflow-hidden">
+      <div class="col-lg-12 p-4 overflow-hidden">
         <h3 class="mb-4">FEATURES & FACILITIES</h3>
 
         <!-- features -->
@@ -38,7 +38,7 @@
               <table class="table table-hover border">
                 <thead class="sticky-top">
                   <tr class="bg-dark text-light">
-                    <th scope="col">#</th>
+                    <th scope="col">UUID</th>
                     <th scope="col">Name</th>
                     <th scope="col">Action</th>
                   </tr>
@@ -68,7 +68,7 @@
               <table class="table table-hover border">
                 <thead class="sticky-top">
                   <tr class="bg-dark text-light">
-                    <th scope="col">#</th>
+                    <th scope="col">UUID</th>
                     <th scope="col">Icon</th>
                     <th scope="col">Name</th>
                     <th scope="col" width="40%">Description</th>

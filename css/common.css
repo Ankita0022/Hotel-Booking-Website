@@ -1,58 +1,79 @@
-:root{
+:root {
     --teal: #2ec1ac;
-    --teal_hover: #279e8c; 
+    --teal_hover: #279e8c;
+    --sidebar-width: 250px;
+    --collapsed-width: 70px;
+    --dark-bg: #212529;
 }
 
-*{
-    font-family: 'Poppins', sans-serif;
-}
-.h-font{
-    font-family: 'Merienda', cursive;
-}
-/* Chrome, Safari, Edge, Opera*/
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button{
-    -webkit-appearance: none;
-    margin: 0;
+/* Page Fade-in Animation */
+body {
+    background-color: #f4f6f9;
+    animation: fadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/*Firefox*/ 
-/* input[type=number]{
-    -moz-appearance: textfield;
-} */
-
-.custom-bg{
-    background-color: var(--teal);
-    border: 1px solid var(--teal);
-
-}
-.custom-bg:hover{
-    background-color: var(--teal_hover);
-    border-color: var(--teal_hover);
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
-.availability-form{
-    margin-top: -50px;
-    z-index: 2;
-    position: relative;
-}
-
-.h-line{
-    width: 150px;
-    margin: 0 auto;
-    height: 1.7px;
-}
-
-.custom-alert{
+/* Sidebar Styling */
+#dashboard-menu {
     position: fixed;
-    top: 80px;
-    right: 25px; 
+    height: 100%;
+    width: var(--sidebar-width);
+    z-index: 11;
+    background-color: var(--dark-bg) !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 4px 0 10px rgba(0,0,0,0.1);
+    overflow-x: hidden;
 }
 
-@media screen and (max-width: 575px) {
-    .availability-form{
-        margin-top: 0px;
-        padding: 0 35px;
-    }
-    
+/* Collapsed Sidebar (Only Icons) */
+#dashboard-menu.collapsed {
+    width: var(--collapsed-width);
+}
+
+#dashboard-menu.collapsed .nav-link span,
+#dashboard-menu.collapsed h4 {
+    display: none;
+}
+
+#dashboard-menu.collapsed .nav-link {
+    display: flex;
+    justify-content: center;
+    padding: 15px 0;
+}
+
+#dashboard-menu.collapsed .nav-link i {
+    margin: 0 !important;
+    font-size: 1.5rem;
+    transition: transform 0.3s ease;
+}
+
+/* Main Content: Fixes the Extra Space */
+#main-content {
+    margin-left: var(--sidebar-width);
+    width: calc(100% - var(--sidebar-width));
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    min-height: 100vh;
+    padding: 30px;
+}
+
+#main-content.expanded {
+    margin-left: var(--collapsed-width);
+    width: calc(100% - var(--collapsed-width));
+}
+
+/* Aesthetic Cards */
+.card {
+    border-radius: 15px;
+    border: none;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.12);
 }

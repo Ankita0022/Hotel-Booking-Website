@@ -20,7 +20,7 @@
 
   <div class="container-fluid" id="main-content">
     <div class="row">
-        <div class="col-lg-10 ms-auto p-4 overflow-hidden">
+        <div class="col-lg-12 p-4 overflow-hidden">
         <h3 class="mb-4">Settings</h3>
 
         <!-- general settings -->
@@ -79,9 +79,9 @@
                 </div>
               </div>
               <div class="modal-footer">
-                <button type="button" onclick="site_title.value = general_data.site_title, site_about.value = general_data.site_about" class="btn text-secondary shadow-none" data-bs-dismiss="modal">Cancel</button>
-                <button type="submit" class="btn custom-bg text-white shadow-none">Save</button>
-              </div>
+                <button type="reset" class="btn text-secondary shadow-none" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-primary text-white shadow-none">Save</button>
+            </div>
             </div>
             </form>
           </div>
@@ -210,9 +210,9 @@
                 </div>
               </div>
               <div class="modal-footer">
-                <button type="button" onclick="contacts_inp(contacts_data)" class="btn text-secondary shadow-none" data-bs-dismiss="modal">Cancel</button>
-                <button type="submit" class="btn custom-bg text-white shadow-none">Save</button>
-              </div>
+                <button type="reset" class="btn text-secondary shadow-none" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-primary text-white shadow-none">Save</button>
+            </div>
             </div>
             </form>
           </div>
@@ -254,9 +254,9 @@
                   <input type="file" name="member_picture" id="member_picture_inp" accept=".jpg,.png,.webp,.jpeg" class="form-control shadow-none" required>
                 </div>
               </div>
-              <div class="modal-footer">
-                <button type="button" onclick="member_name.value='', member_picture.value=''" class="btn text-secondary shadow-none" data-bs-dismiss="modal">Cancel</button>
-                <button type="submit" class="btn custom-bg text-white shadow-none">Save</button>
+                <div class="modal-footer">
+                  <button type="reset" class="btn text-secondary shadow-none" data-bs-dismiss="modal">Cancel</button>
+                  <button type="submit" class="btn btn-primary text-white shadow-none">Save</button>
               </div>
             </div>
             </form>
