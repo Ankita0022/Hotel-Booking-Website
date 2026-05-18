@@ -33,7 +33,6 @@
     </div>
     </div>
 
-    <!-- check availability form -->
      <div class="container availability-form">
         <div class="row">
             <div class="col-lg-14 bg-white shadow p-4 rounded">

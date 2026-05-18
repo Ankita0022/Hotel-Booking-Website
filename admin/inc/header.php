@@ -20,6 +20,25 @@
                         </a>
                     </li>
                     <li class="nav-item mb-1">
+                        <button class="btn text-white px-3 w-100 shadow-none text-start d-flex align-items-center justify-content-between" type="button" data-bs-toggle="collapse" data-bs-target="#bookingLinks">
+                            <span><i class="bi bi-calendar-check me-2"></i>Bookings</span>
+                            <span><i class="bi bi-chevron-down"></i></span>
+                        </button>
+                        <div class="collapse show small" id="bookingLinks">
+                            <ul class="nav nav-pills flex-column rounded border border-secondary">
+                                <li class="nav-item mb-1">
+                                    <a class="nav-link text-white " href="new_bookings.php"><i class="bi bi-calendar-plus me-2"></i> New Bookings</a>
+                                </li>
+                                <li class="nav-item mb-1">
+                                    <a class="nav-link text-white d-flex align-items-center" href="refund_bookings.php"><i class="bi bi-currency-exchange me-2"></i> Refund Bookings</a>
+                                </li>
+                                <li class="nav-item mb-1">
+                                    <a class="nav-link text-white d-flex align-items-center" href="booking_records.php"><i class="bi bi-journal-bookmark-fill me-2"></i> All Bookings</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="nav-item mb-1">
                         <a class="nav-link text-white d-flex align-items-center" href="user.php">
                             <i class="bi bi-people me-2"></i> <span>Users</span>
                         </a>
@@ -44,12 +63,7 @@
                         <a class="nav-link text-white d-flex align-items-center" href="carousel.php">
                             <i class="bi bi-images me-2"></i> <span>Carousel</span>
                         </a>
-                    </li>
-                    <li class="nav-item mb-1">
-                        <a class="nav-link text-white d-flex align-items-center" href="orders.php">
-                            <i class="bi bi-cart me-2"></i> <span>Orders</span>
-                        </a>
-                    </li>         
+                    </li>     
                     <li class="nav-item mb-1">
                         <a class="nav-link text-white d-flex align-items-center" href="settings.php">
                             <i class="bi bi-gear me-2"></i> <span>Settings</span>

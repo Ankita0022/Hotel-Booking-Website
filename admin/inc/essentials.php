@@ -1,4 +1,8 @@
 <?php
+
+define('RAZORPAY_KEY_ID', 'rzp_test_SiPCJt11p5b6fC');
+define('RAZORPAY_KEY_SECRET', 'gOILq35O81b674kbmsPQgLj0');
+
 //frontend purpose data
 define('SITE_URL','http://127.0.0.1/hbwebsite/');
 define('ABOUT_IMG_PATH',SITE_URL.'images/about/');
