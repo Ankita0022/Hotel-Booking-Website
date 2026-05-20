@@ -2,6 +2,9 @@
   require_once('../admin/inc/db_config.php');
   require_once('../admin/inc/essentials.php');
 
+  // CRITICAL FIX: Initialize session management so PHP can read your active login states asynchronously
+  if(session_status() == PHP_SESSION_NONE) session_start();
+
   if(isset($_GET['check_availability']))
   {
     $settings_q = "SELECT * FROM `settings` WHERE `sr_no`=?";
@@ -39,9 +42,11 @@
           if($fac_fetch['count'] != count($facility_list)) continue;
       }
 
-      $fea_q = mysqli_query($con, "SELECT f.name FROM `features` f 
+      // FIX: Replaced $con with select helper function to safely fetch features without error
+      $fea_q = select("SELECT f.name FROM `features` f 
         INNER JOIN `room_features` rfea ON f.id = rfea.features_id 
-        WHERE rfea.room_id = '$room_data[id]'");
+        WHERE rfea.room_id = ?", [$room_data['id']], 'i');
+        
       $features_data = "";
       while($fea_row = mysqli_fetch_assoc($fea_q)){
         $features_data .= "<span class='badge rounded-pill bg-light text-dark text-wrap me-1 mb-1'>$fea_row[name]</span>";
@@ -54,6 +59,7 @@
       if($settings_r['shutdown']){
           $book_btn = "<button class='btn btn-sm w-100 btn-danger shadow-none mb-2' disabled>Bookings Closed</button>";
       } else {
+          // Captures active session variables precisely without defaulting to 0
           $login = (isset($_SESSION['login']) && $_SESSION['login'] == true) ? 1 : 0;
           $book_btn = "<button onclick='checkLoginToBook($login, $room_data[id])' class='btn btn-sm w-100 text-white custom-bg shadow-none mb-2'>Book Now</button>";
       }

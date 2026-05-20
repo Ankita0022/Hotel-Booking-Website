@@ -6,7 +6,6 @@
     --dark-bg: #212529;
 }
 
-/* Page Fade-in Animation */
 body {
     background-color: #f4f6f9;
     animation: fadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1);
@@ -17,7 +16,6 @@ body {
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* Sidebar Styling */
 #dashboard-menu {
     position: fixed;
     height: 100%;
@@ -29,7 +27,6 @@ body {
     overflow-x: hidden;
 }
 
-/* Collapsed Sidebar (Only Icons) */
 #dashboard-menu.collapsed {
     width: var(--collapsed-width);
 }
@@ -51,7 +48,6 @@ body {
     transition: transform 0.3s ease;
 }
 
-/* Main Content: Fixes the Extra Space */
 #main-content {
     margin-left: var(--sidebar-width);
     width: calc(100% - var(--sidebar-width));
@@ -65,7 +61,6 @@ body {
     width: calc(100% - var(--collapsed-width));
 }
 
-/* Aesthetic Cards */
 .card {
     border-radius: 15px;
     border: none;
@@ -76,4 +71,21 @@ body {
 .card:hover {
     transform: translateY(-8px);
     box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+}
+
+.btn-primary-custom {
+    background-color: #2ec1ac !important;
+    border-color: #2ec1ac !important;
+    transition: all 0.3s ease;
+}
+
+.btn-primary-custom:hover {
+    background-color: #279e8c !important;
+    border-color: #279e8c !important;
+}
+
+.border-dashed {
+    border-style: dashed !important;
+    border-width: 2px !important;
+    border-color: #ddd !important;
 }

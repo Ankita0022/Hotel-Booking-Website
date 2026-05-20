@@ -2,7 +2,6 @@
     require_once('admin/inc/db_config.php');
     require_once('admin/inc/essentials.php');
 
-
     $contact_q = "SELECT * FROM `contact_details` WHERE `sr_no`=?";
     $values = [1];
     $contact_r = mysqli_fetch_assoc(select($contact_q,$values,'i'));
@@ -13,7 +12,6 @@
 ?>
 
 <?php 
-    // Assuming $settings_r is already fetched from the 'settings' table
     if($settings_r['shutdown']){
         echo<<<data
             <div class='bg-danger text-center p-2 fw-bold text-white'>
@@ -24,7 +22,6 @@
     }
 ?>
 
-<!-- navbar -->
 <nav id="nav-bar" class="navbar navbar-expand-lg navbar-light bg-white px-lg-3 py-lg-2 shadow-sm sticky-top">
     <div class="container-fluid">
         <a class="navbar-brand me-5 fw-bold fs-3 h-font" href="index.php">Hotel Gaarland</a>
@@ -71,7 +68,7 @@
                     data;
                 } else {
                     echo<<<data
-                        <button type="button" class="btn btn-outline-dark shadow-none me-lg-3 me-2" data-bs-toggle="modal" data-bs-target="#LoginModal">
+                        <button type="button" class="btn btn-outline-dark shadow-none me-lg-3 me-2" data-bs-toggle="modal" data-bs-target="#loginModal">
                             Login
                         </button>
                         <button type="button" class="btn btn-outline-dark shadow-none" data-bs-toggle="modal" data-bs-target="#registerModal">
@@ -85,8 +82,7 @@
     </div>
 </nav>
 
-<!-- LOGIN -->
-<div class="modal fade" id="LoginModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
+<div class="modal fade" id="loginModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
             <form id="login-form">
@@ -115,8 +111,6 @@
     </div>
 </div>
 
-
-<!-- REGISTER -->
 <div class="modal fade" id="registerModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -129,7 +123,7 @@
                 </div>
                 <div class="modal-body">
                     <span class="badge rounded-pill bg-light text-dark mb-3 text-wrap lh-base">
-                        Note: Your details must match with your ID (Aadhaar card, Passport, Driving license etc.)
+                        Note: Your details must match with your ID (Passport, Driving license etc.)
                         that will be required during check-in.
                     </span> 
                     <div class="container-fluid">

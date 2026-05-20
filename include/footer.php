@@ -1,5 +1,4 @@
-    <!-- Footer -->
-    <div class="container-fluid bg-white mt-5">
+<div class="container-fluid bg-white mt-5">
         <div class="row">
             <div class="col-lg-4 p-4">
                 <h3 class="h-font fw-bold fs-3 mb-2">Hotel Gaarland</h3>
@@ -47,15 +46,16 @@
 
     <script>
         function setActive(){
-            let navbar =document.getElementById('nav-bar');
-            let a_tags =navbar.getElementsByTagName('a');
+            let navbar = document.getElementById('nav-bar');
+            if (navbar) {
+                let a_tags = navbar.getElementsByTagName('a');
+                for(i=0; i<a_tags.length; i++){
+                    let file = a_tags[i].href.split('/').pop();
+                    let file_name = file.split('.')[0];
 
-            for(i=0; i<a_tags.length; i++){
-                let file =a_tags[i].href.split('/').pop();
-                let file_name = file.split('.')[0];
-
-                if(document.location.href.indexOf(file_name) >= 0){
-                    a_tags[i].classList.add('active');
+                    if(document.location.href.indexOf(file_name) >= 0){
+                        a_tags[i].classList.add('active');
+                    }
                 }
             }
         }
@@ -74,73 +74,92 @@
             setTimeout(() => element.remove(), 3000);
         }
 
-        // --- REGISTER  ---
-{            let register_form = document.getElementById('register-form');
+        // --- REGISTER ---
+        let register_form = document.getElementById('register-form');
+        if (register_form) {
+            register_form.addEventListener('submit', (e) => {
+                e.preventDefault();
 
-            // ONLY run this if the form exists (Guard)
-            if (register_form) {
-                register_form.addEventListener('submit', (e) => {
-                    e.preventDefault();
+                let data = new FormData(register_form);
+                data.append('register', '');
 
-                    let data = new FormData(register_form);
-                    data.append('register', '');
+                let xhr = new XMLHttpRequest();
+                xhr.open("POST", "ajax/login_register.php", true);
 
-                    let xhr = new XMLHttpRequest();
-                    xhr.open("POST", "ajax/login_register.php", true);
-
-                    xhr.onload = function() {
-                        if (this.responseText == 'pass_mismatch') {
-                            alert('error', "Passwords do not match!");
-                        } else if (this.responseText == 'email_already') {
-                            alert('error', "Email already registered!");
-                        } else if (this.responseText == 'phone_already') {
-                            alert('error', "Phone number already registered!");
-                        } else if (this.responseText == 'inv_img') {
-                            alert('error', "Only JPG, WEBP & PNG allowed!");
-                        } else if (this.responseText == 'upd_failed') {
-                            alert('error', "Image upload failed!");
-                        } else if (this.responseText == 'ins_failed') {
-                            alert('error', "Registration failed!");
-                        } else if (this.responseText.trim() == '1') {
-                            alert('success', "Registration successful!");
-                            register_form.reset();
-                            // Close modal
-                            bootstrap.Modal.getInstance(document.getElementById('registerModal')).hide();
-                        }
-                    }
-                    xhr.send(data);
-                });
-            }
-
-            // --- LOGIN ---
-            let login_form = document.getElementById('login-form');
-
-            if (login_form) {
-                login_form.addEventListener('submit', (e) => {
-                    e.preventDefault();
-
-                    let data = new FormData(login_form);
-                    data.append('login', '');
-
-                    let xhr = new XMLHttpRequest();
-                    xhr.open("POST", "ajax/login_register.php", true);
-
-                    xhr.onload = function() {
+                xhr.onload = function() {
                     if (this.responseText == 'pass_mismatch') {
                         alert('error', "Passwords do not match!");
                     } else if (this.responseText == 'email_already') {
                         alert('error', "Email already registered!");
                     } else if (this.responseText == 'phone_already') {
                         alert('error', "Phone number already registered!");
-                    } 
-                    // ... (other error checks) ...
-                    else if (this.responseText.trim() == '1') {
-                        // Since user is now logged in automatically, refresh the page
+                    } else if (this.responseText == 'inv_img') {
+                        alert('error', "Only JPG, WEBP & PNG allowed!");
+                    } else if (this.responseText == 'upd_failed') {
+                        alert('error', "Image upload failed!");
+                    } else if (this.responseText == 'ins_failed') {
+                        alert('error', "Registration failed!");
+                    } else if (this.responseText.trim() == '1') {
+                        alert('success', "Registration successful!");
+                        register_form.reset();
+                        bootstrap.Modal.getInstance(document.getElementById('registerModal')).hide();
+                    }
+                }
+                xhr.send(data);
+            });
+        }
+
+        // --- LOGIN ---
+        let login_form = document.getElementById('login-form');
+        if (login_form) {
+            login_form.addEventListener('submit', (e) => {
+                e.preventDefault();
+
+                let data = new FormData(login_form);
+                data.append('login', '');
+
+                let xhr = new XMLHttpRequest();
+                xhr.open("POST", "ajax/login_register.php", true);
+
+                xhr.onload = function() {
+                    if (this.responseText == 'inv_credential') {
+                        alert('error', "Invalid Email/Phone or Password!");
+                    } else if (this.responseText == 'not_verified') {
+                        alert('error', "Email verification pending!");
+                    } else if (this.responseText == 'inactive') {
+                        alert('error', "Account suspended. Please contact administration.");
+                    } else if (this.responseText.trim() == '1') {
                         window.location = window.location.pathname;
                     }
                 }
-                    xhr.send(data);
-                });
-            }}
-</script>
+                xhr.send(data);
+            });
+        }
 
+        // --- AUTHENTICATED CHECKOUT INTERCEPTOR ---
+        function checkLoginToBook(login, room_id) {
+            if (login == 1) {
+                let form = document.createElement('form');
+                form.method = 'POST';
+                form.action = 'pay_now.php';
+
+                let input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'room_id';
+                input.value = room_id;
+
+                form.appendChild(input);
+                document.body.appendChild(form);
+                form.submit();
+            } else {
+                let myModal = document.getElementById('loginModal');
+                if (myModal) {
+                    let modal = bootstrap.Modal.getOrCreateInstance(myModal);
+                    alert('error', 'Please login to your account first to book rooms!');
+                    modal.show();
+                } else {
+                    alert('error', 'Authentication window component missing!');
+                }
+            }
+        }
+    </script>
