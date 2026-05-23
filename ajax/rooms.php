@@ -42,6 +42,19 @@
           if($fac_fetch['count'] != count($facility_list)) continue;
       }
 
+      // Check if room is already booked for the requested dates (or today by default)
+      $chk_in = ($chk_data['checkin'] != '') ? $chk_data['checkin'] : date('Y-m-d');
+      $chk_out = ($chk_data['checkout'] != '') ? $chk_data['checkout'] : date('Y-m-d', strtotime('+1 day'));
+
+      $tb_query = "SELECT COUNT(*) AS `total_bookings` FROM `booking_order` 
+          WHERE booking_status='booked' AND room_id=? 
+          AND check_in < ? AND check_out > ?";
+      
+      $tb_values = [$room_data['id'], $chk_out, $chk_in];
+      $tb_fetch = mysqli_fetch_assoc(select($tb_query, $tb_values, 'iss'));
+
+      $is_available = ($tb_fetch['total_bookings'] < $room_data['quantity']);
+
       // FIX: Replaced $con with select helper function to safely fetch features without error
       $fea_q = select("SELECT f.name FROM `features` f 
         INNER JOIN `room_features` rfea ON f.id = rfea.features_id 
@@ -58,6 +71,8 @@
       $book_btn = "";
       if($settings_r['shutdown']){
           $book_btn = "<button class='btn btn-sm w-100 btn-danger shadow-none mb-2' disabled>Bookings Closed</button>";
+      } else if(!$is_available) {
+          $book_btn = "<button class='btn btn-sm w-100 btn-danger shadow-none mb-2' disabled>Not Available</button>";
       } else {
           // Captures active session variables precisely without defaulting to 0
           $login = (isset($_SESSION['login']) && $_SESSION['login'] == true) ? 1 : 0;

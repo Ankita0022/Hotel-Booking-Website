@@ -150,16 +150,17 @@
 
                 form.appendChild(input);
                 document.body.appendChild(form);
-                form.submit();
-            } else {
-                let myModal = document.getElementById('loginModal');
-                if (myModal) {
-                    let modal = bootstrap.Modal.getOrCreateInstance(myModal);
-                    alert('error', 'Please login to your account first to book rooms!');
-                    modal.show();
+                window.location.href = 'confirm_booking.php?id=' + room_id;
                 } else {
-                    alert('error', 'Authentication window component missing!');
+                    let myModal = document.getElementById('loginModal');
+                    if (myModal) {
+                        let modal = bootstrap.Modal.getOrCreateInstance(myModal);
+                        alert('error', 'Please login to your account first to book rooms!');
+                        modal.show();
+                    } else {
+                        alert('error', 'Authentication window component missing!');
+                    }
                 }
             }
-        }
+        
     </script>

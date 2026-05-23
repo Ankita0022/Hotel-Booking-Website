@@ -43,17 +43,21 @@ body {
 
 
 #dashboard-menu.collapsed .nav-link span,
+#dashboard-menu.collapsed .btn span,
 #dashboard-menu.collapsed h4,
 #dashboard-menu.collapsed h3 {
     display: none; 
 }
 
-#dashboard-menu.collapsed .nav-link {
+#dashboard-menu.collapsed .nav-link,
+#dashboard-menu.collapsed .btn {
     padding: 10px 0 !important; 
     margin: 2px 5px !important;
+    justify-content: center !important;
 }
 
-#dashboard-menu.collapsed .nav-link i {
+#dashboard-menu.collapsed .nav-link i,
+#dashboard-menu.collapsed .btn i {
     font-size: 1.3rem !important; 
     display: block;
     margin: 0 auto !important;
@@ -100,10 +104,6 @@ body {
     border: none;
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     overflow: hidden;
-}
-.card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 15px 35px rgba(0,0,0,0.1) !important;
 }
 
 #table-pagination button {
@@ -160,11 +160,43 @@ body {
     z-index: 10;
 }
 
+/* Dashboard Card Accent Classes */
+.card-pulse {
+    transition: transform 0.22s ease-in-out, box-shadow 0.22s ease-in-out !important;
+}
+
+.card-pulse:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15) !important;
+}
+
+.text-light-50 {
+    color: rgba(255, 255, 255, 0.65) !important;
+}
+
 @media screen and (max-width: 992px) {
     #dashboard-menu {
-        width: var(--collapsed-width);
+        width: var(--collapsed-width) !important;
     }
     #main-content {
-        margin-left: var(--collapsed-width);
+        margin-left: var(--collapsed-width) !important;
+    }
+    #dashboard-menu:not(.expanded-mobile) .nav-link span,
+    #dashboard-menu:not(.expanded-mobile) .btn span,
+    #dashboard-menu:not(.expanded-mobile) h4,
+    #dashboard-menu:not(.expanded-mobile) h3 {
+        display: none; 
+    }
+    #dashboard-menu:not(.expanded-mobile) .nav-link,
+    #dashboard-menu:not(.expanded-mobile) .btn {
+        padding: 10px 0 !important; 
+        margin: 2px 5px !important;
+        justify-content: center !important;
+    }
+    #dashboard-menu:not(.expanded-mobile) .nav-link i,
+    #dashboard-menu:not(.expanded-mobile) .btn i {
+        font-size: 1.3rem !important; 
+        display: block;
+        margin: 0 auto !important;
     }
 }

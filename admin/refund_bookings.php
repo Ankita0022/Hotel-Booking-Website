@@ -72,21 +72,21 @@
       xhr.send('get_refunds&search='+search);
     }
 
-    function clear_refund(id) {
-      if(confirm("Mark this refund transaction log entry as complete and archive it?")) {
+    function refund_booking(id) {
+      if(confirm("Refund money for this cancelled booking?")) {
         let xhr = new XMLHttpRequest();
         xhr.open("POST", "ajax/refund_bookings_crud.php", true);
         xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 
         xhr.onload = function() {
           if(this.responseText == 1) {
-            alert('success', 'Refund log entry successfully closed and archived!');
+            alert('success', 'Refund successful!');
             get_refunds();
           } else {
             alert('error', 'Operation pipeline execution failed.');
           }
         }
-        xhr.send('clear_refund=&booking_id='+id);
+        xhr.send('refund_booking=&booking_id='+id);
       }
     }
 

@@ -31,7 +31,7 @@
   <div class="container my-5 px-4" id="main-content">
     <div class="row">
 
-      <div class="col-12 my-4">
+      <div class="col-12 my-4 pt-4 mb-4">
         <h2 class="fw-bold h-font">PROFILE</h2>
         <div style="font-size: 14px;">
           <a href="index.php" class="text-secondary text-decoration-none fw-bold">HOME</a>
@@ -40,81 +40,77 @@
         </div>
       </div>
 
-      <div class="col-lg-8 col-md-12 mb-4">
-        <div class="card border-0 shadow-sm rounded-3 p-3 bg-white">
-          <div class="card-body">
-            <h5 class="mb-4 fw-bold text-dark">Basic Information</h5>
+      <!-- Left Column: Profile Pic & Password -->
+      <div class="col-lg-4 col-md-5 mb-5 px-4">
+        <div class="card border-0 shadow rounded-3 mb-4 bg-white">
+          <div class="card-body text-center p-4">
+            <h5 class="mb-4 fw-bold h-font"><i class="bi bi-person-circle me-2"></i>PROFILE PICTURE</h5>
+            <img src="<?php echo USERS_IMG_PATH.$u_data['profile']; ?>" class="rounded-circle img-fluid mb-4 shadow-sm border border-3 border-light" style="width: 170px; height: 170px; object-fit: cover;">
             
-            <form id="info-form">
-              <div class="row">
-                <div class="col-md-6 mb-3">
-                  <label class="form-label fw-bold">Name</label>
-                  <input type="text" name="name" value="<?php echo $u_data['name']; ?>" class="form-control shadow-none" required>
-                </div>
-                <div class="col-md-6 mb-3">
-                  <label class="form-label fw-bold">Phone Number</label>
-                  <input type="number" name="phonenum" value="<?php echo $u_data['phonenum']; ?>" class="form-control shadow-none" required>
-                </div>
-                <div class="col-md-6 mb-3">
-                  <label class="form-label fw-bold">Date of Birth</label>
-                  <input type="date" name="dob" value="<?php echo $u_data['dob']; ?>" class="form-control shadow-none" required>
-                </div>
-                <div class="col-md-6 mb-3">
-                  <label class="form-label fw-bold">Pincode</label>
-                  <input type="number" name="pincode" value="<?php echo $u_data['pincode']; ?>" class="form-control shadow-none" required>
-                </div>
-                <div class="col-md-12 mb-4">
-                  <label class="form-label fw-bold">Address</label>
-                  <textarea name="address" rows="3" class="form-control shadow-none" required><?php echo $u_data['address']; ?></textarea>
-                </div>
+            <form id="profile-form">
+              <div class="mb-3 text-start">
+                <label class="form-label fw-bold text-secondary">Select New Image</label>
+                <input type="file" name="profile" accept=".jpg, .jpeg, .png, .webp" class="form-control shadow-none border-2" required>
               </div>
-              <button type="submit" class="btn btn-dark shadow-none rounded-pill px-4 fw-bold">Save Changes</button>
+              <button type="submit" class="btn custom-bg text-white shadow-none rounded-pill w-100 fw-bold"><i class="bi bi-camera-fill me-2"></i>Update Picture</button>
             </form>
+          </div>
+        </div>
 
+        <div class="card border-0 shadow rounded-3 bg-white">
+          <div class="card-body p-4">
+            <h5 class="mb-4 fw-bold h-font"><i class="bi bi-shield-lock-fill me-2"></i>CHANGE PASSWORD</h5>
+            
+            <form id="pass-form">
+              <div class="mb-3">
+                <label class="form-label fw-bold text-secondary">New Password</label>
+                <input type="password" name="new_pass" class="form-control shadow-none border-2" placeholder="Enter new password" required>
+              </div>
+              <div class="mb-4">
+                <label class="form-label fw-bold text-secondary">Confirm Password</label>
+                <input type="password" name="confirm_pass" class="form-control shadow-none border-2" placeholder="Confirm new password" required>
+              </div>
+              <button type="submit" class="btn custom-bg text-white shadow-none rounded-pill w-100 fw-bold"><i class="bi bi-lock-fill me-2"></i>Update Password</button>
+            </form>
           </div>
         </div>
       </div>
 
-      <div class="col-lg-4 col-md-12">
-        <div class="row">
-          
-          <div class="col-12 mb-4">
-            <div class="card border-0 shadow-sm rounded-3 p-3 bg-white">
-              <div class="card-body text-center">
-                <h5 class="mb-3 fw-bold text-start text-dark">Profile Picture</h5>
-                <img src="<?php echo USERS_IMG_PATH.$u_data['profile']; ?>" class="rounded-circle img-fluid mb-3 border p-1" style="width: 150px; height: 150px; object-fit: cover;">
-                
-                <form id="profile-form">
-                  <div class="mb-3 text-start">
-                    <label class="form-label fw-bold">Select Image</label>
-                    <input type="file" name="profile" accept=".jpg, .jpeg, .png, .webp" class="form-control shadow-none" required>
-                  </div>
-                  <button type="submit" class="btn btn-dark shadow-none rounded-pill w-100 fw-bold">Update Picture</button>
-                </form>
+      <!-- Right Column: Basic Info -->
+      <div class="col-lg-8 col-md-7 mb-5 px-4">
+        <div class="card border-0 shadow rounded-3 p-4 bg-white h-100">
+          <div class="card-body">
+            <h5 class="mb-4 fw-bold h-font"><i class="bi bi-card-list me-2"></i>BASIC INFORMATION</h5>
+            
+            <form id="info-form">
+              <div class="row">
+                <div class="col-md-6 mb-4">
+                  <label class="form-label fw-bold text-secondary"><i class="bi bi-person-fill me-1"></i> Name</label>
+                  <input type="text" name="name" value="<?php echo $u_data['name']; ?>" class="form-control shadow-none border-2" required>
+                </div>
+                <div class="col-md-6 mb-4">
+                  <label class="form-label fw-bold text-secondary"><i class="bi bi-telephone-fill me-1"></i> Phone Number</label>
+                  <input type="number" name="phonenum" value="<?php echo $u_data['phonenum']; ?>" class="form-control shadow-none border-2" required>
+                </div>
+                <div class="col-md-6 mb-4">
+                  <label class="form-label fw-bold text-secondary"><i class="bi bi-calendar-date-fill me-1"></i> Date of Birth</label>
+                  <input type="date" name="dob" value="<?php echo $u_data['dob']; ?>" class="form-control shadow-none border-2" required>
+                </div>
+                <div class="col-md-6 mb-4">
+                  <label class="form-label fw-bold text-secondary"><i class="bi bi-geo-alt-fill me-1"></i> Pincode</label>
+                  <input type="number" name="pincode" value="<?php echo $u_data['pincode']; ?>" class="form-control shadow-none border-2" required>
+                </div>
+                <div class="col-md-12 mb-4">
+                  <label class="form-label fw-bold text-secondary"><i class="bi bi-house-door-fill me-1"></i> Address</label>
+                  <textarea name="address" rows="5" class="form-control shadow-none border-2" required><?php echo $u_data['address']; ?></textarea>
+                </div>
               </div>
-            </div>
-          </div>
-
-          <div class="col-12 mb-4">
-            <div class="card border-0 shadow-sm rounded-3 p-3 bg-white">
-              <div class="card-body">
-                <h5 class="mb-3 fw-bold text-dark">Change Password</h5>
-                
-                <form id="pass-form">
-                  <div class="mb-3">
-                    <label class="form-label fw-bold">New Password</label>
-                    <input type="password" name="new_pass" class="form-control shadow-none" placeholder="Enter new password" required>
-                  </div>
-                  <div class="mb-3">
-                    <label class="form-label fw-bold">Confirm Password</label>
-                    <input type="password" name="confirm_pass" class="form-control shadow-none" placeholder="Confirm new password" required>
-                  </div>
-                  <button type="submit" class="btn btn-dark shadow-none rounded-pill w-100 fw-bold mt-2">Update Password</button>
-                </form>
+              <div class="text-end mt-2">
+                <button type="submit" class="btn custom-bg text-white shadow-none rounded-pill px-5 py-2 fw-bold"><i class="bi bi-cloud-arrow-up-fill me-2"></i>Save Changes</button>
               </div>
-            </div>
-          </div>
+            </form>
 
+          </div>
         </div>
       </div>
 

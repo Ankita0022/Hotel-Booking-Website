@@ -81,6 +81,25 @@
             <h4 class="fw-bold mb-3">₹<?php echo $room_data['price']; ?> per night</h4>
             
             <div class="mb-3">
+              <?php
+                $rating_q = "SELECT AVG(rating) AS `avg_rating` FROM `rating_review` WHERE `room_id`='$room_data[id]'";
+                $rating_res = mysqli_query($con, $rating_q);
+                $rating_fetch = mysqli_fetch_assoc($rating_res);
+
+                $rating_stars = "";
+                if($rating_fetch['avg_rating'] != NULL) {
+                  $avg_rating = round($rating_fetch['avg_rating']);
+                  for($i=0; $i<$avg_rating; $i++) {
+                    $rating_stars .= "<i class='bi bi-star-fill text-warning me-1'></i>";
+                  }
+                  echo '<div class="mb-2">'.$rating_stars.'</div>';
+                } else {
+                  echo '<div class="text-muted small mb-2"><i class="bi bi-star me-1"></i>No ratings yet</div>';
+                }
+              ?>
+            </div>
+
+            <div class="mb-3">
               <h6 class="mb-1 fw-bold">Features</h6>
               <?php
                 $fea_q = "SELECT f.name FROM `features` f 
@@ -118,21 +137,84 @@
             </div>
 
             <?php
-              $login = 0;
-              if(isset($_SESSION['login']) && $_SESSION['login'] == true){
-                $login = 1;
+              $is_available = true;
+              $today = date('Y-m-d');
+              $tomorrow = date('Y-m-d', strtotime('+1 day'));
+              $tb_query = "SELECT COUNT(*) AS `total_bookings` FROM `booking_order` 
+                  WHERE booking_status='booked' AND room_id=? 
+                  AND check_in < ? AND check_out > ?";
+              $tb_res = select($tb_query, [$room_data['id'], $tomorrow, $today], 'iss');
+              $tb_fetch = mysqli_fetch_assoc($tb_res);
+
+              if($tb_fetch['total_bookings'] >= $room_data['quantity']) {
+                  $is_available = false;
               }
-              echo "<button onclick='checkLoginToBook($login, {$room_data['id']})' class='btn w-100 text-white btn-primary custom-bg shadow-none rounded-pill p-2 fw-bold mb-2'>Book Now</button>";
+
+              $book_btn = "";
+              if($settings_r['shutdown']){
+                  $book_btn = "<button class='btn w-100 btn-danger shadow-none rounded-pill p-2 fw-bold mb-2' disabled>Bookings Closed</button>";
+              } else if(!$is_available) {
+                  $book_btn = "<button class='btn w-100 btn-danger shadow-none rounded-pill p-2 fw-bold mb-2' disabled>Not Available</button>";
+              } else {
+                  $login = 0;
+                  if(isset($_SESSION['login']) && $_SESSION['login'] == true){
+                    $login = 1;
+                  }
+                  $book_btn = "<button onclick='checkLoginToBook($login, {$room_data['id']})' class='btn w-100 text-white btn-primary custom-bg shadow-none rounded-pill p-2 fw-bold mb-2'>Book Now</button>";
+              }
+              echo $book_btn;
             ?>
           </div>
         </div>
       </div>
 
-      <div class="col-12 mt-4 mb-5">
+      <div class="col-12 mt-4 mb-4">
         <h5 class="fw-bold">Description</h5>
         <p class="bg-white p-4 rounded shadow-sm text-secondary border-start border-4 border-dark" style="line-height: 1.7;">
-          <?php echo $room_data['desc']; ?>
+          <?php echo $room_data['description']; ?>
         </p>
+      </div>
+
+      <div class="col-12 mt-3 mb-5">
+        <h5 class="fw-bold mb-3">Reviews & Ratings</h5>
+        
+        <div class="bg-white p-4 rounded shadow-sm">
+          <?php
+            $review_q = "SELECT rr.*, uc.name AS user_name, uc.profile AS user_pic FROM `rating_review` rr 
+                         INNER JOIN `user_cred` uc ON rr.user_id = uc.id 
+                         WHERE rr.room_id = ? ORDER BY rr.sr_no DESC";
+            
+            $review_res = select($review_q, [$room_data['id']], 'i');
+
+            if(mysqli_num_rows($review_res) == 0) {
+              echo '<div class="text-secondary py-2"><i class="bi bi-chat-square-text me-2"></i>No reviews submitted for this room choice yet.</div>';
+            } else {
+              while($rev_row = mysqli_fetch_assoc($review_res)) {
+                // Build matching dynamic star layouts per item row entry
+                $stars = "";
+                for($i=0; $i<$rev_row['rating']; $i++) {
+                  $stars .= "<i class='bi bi-star-fill text-warning small me-1'></i>";
+                }
+
+                // Fallback avatar handling path matching your user account properties
+                $user_avatar = ($rev_row['user_pic'] != '') ? USERS_IMG_PATH.$rev_row['user_pic'] : "images/users/thumbnail.jpg";
+                $rev_date = date("d-m-Y", strtotime($rev_row['datentime']));
+
+                echo "
+                  <div class='review-item mb-4 border-bottom pb-3'>
+                    <div class='d-flex align-items-center mb-2'>
+                      <img src='$user_avatar' class='rounded-circle me-2 border' style='width: 35px; height: 35px; object-fit: cover;'>
+                      <h6 class='m-0 fw-bold small text-dark'>{$rev_row['user_name']}</h6>
+                      <span class='text-muted ms-auto super-small bg-light px-2 py-0.5 border rounded' style='font-size: 11px;'>$rev_date</span>
+                    </div>
+                    <div class='rating mb-2'>$stars</div>
+                    <p class='text-secondary small m-0' style='line-height: 1.6;'>{$rev_row['review']}</p>
+                  </div>
+                ";
+              }
+            }
+          ?>
+        </div>
       </div>
 
     </div>

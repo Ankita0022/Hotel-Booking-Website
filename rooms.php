@@ -11,7 +11,15 @@
 
 <body class="bg-light">
 
-    <?php require("include/header.php"); ?>
+<?php 
+    require("include/header.php"); 
+    
+    // Read parameters from URL (if submitted from index.php)
+    $checkin_default = isset($_GET['checkin']) ? $_GET['checkin'] : '';
+    $checkout_default = isset($_GET['checkout']) ? $_GET['checkout'] : '';
+    $adult_default = isset($_GET['adult']) ? $_GET['adult'] : '';
+    $children_default = isset($_GET['children']) ? $_GET['children'] : '';
+?>
 
     <div class="my-5 px-4">
         <h2 class="fw-bold h-font text-center">OUR ROOMS</h2>
@@ -32,9 +40,9 @@
                             <div class="border bg-light p-3 rounded mb-3">
                                 <h5 class="mb-3" style="font-size: 18px;">CHECK AVAILABILITY</h5>
                                 <label class="form-label">Check-in</label>
-                                <input type="date" class="form-control shadow-none mb-3" id="checkin" onchange="fetch_rooms()">
+                                <input type="date" class="form-control shadow-none mb-3" id="checkin" value="<?php echo $checkin_default; ?>" onchange="fetch_rooms()">
                                 <label class="form-label">Check-out</label>
-                                <input type="date" class="form-control shadow-none mb-3" id="checkout" onchange="fetch_rooms()">
+                                <input type="date" class="form-control shadow-none mb-3" id="checkout" value="<?php echo $checkout_default; ?>" onchange="fetch_rooms()">
                             </div>
 
                             <div class="border bg-light p-3 rounded mb-3">
@@ -57,11 +65,11 @@
                                 <div class="d-flex">
                                     <div class="me-3">
                                         <label class="form-label">Adults</label>
-                                        <input type="number" id="adults" oninput="fetch_rooms()" class="form-control shadow-none mb-3">
+                                        <input type="number" id="adults" value="<?php echo $adult_default; ?>" oninput="fetch_rooms()" class="form-control shadow-none mb-3">
                                     </div>
                                     <div>
                                         <label class="form-label">Children</label>
-                                        <input type="number" id="children" oninput="fetch_rooms()" class="form-control shadow-none mb-3">
+                                        <input type="number" id="children" value="<?php echo $children_default; ?>" oninput="fetch_rooms()" class="form-control shadow-none mb-3">
                                     </div>
                                 </div>
                             </div>
@@ -106,16 +114,28 @@
                             $room_thumb = ROOMS_IMG_PATH.$thumb_res['image'];
                         }
 
-                        // Handle Booking Button logic (Shutdown check)
+                        // Handle Booking Button logic (Shutdown & Availability check)
+                        $today = date('Y-m-d');
+                        $tomorrow = date('Y-m-d', strtotime('+1 day'));
+                        $tb_query = "SELECT COUNT(*) AS `total_bookings` FROM `booking_order` 
+                            WHERE booking_status='booked' AND room_id=? 
+                            AND check_in < ? AND check_out > ?";
+                        $tb_res = select($tb_query, [$room_data['id'], $tomorrow, $today], 'iss');
+                        $tb_fetch = mysqli_fetch_assoc($tb_res);
+
+                        $is_available = ($tb_fetch['total_bookings'] < $room_data['quantity']);
+
                         $book_btn = "";
-                        if(!$settings_r['shutdown']){
+                        if($settings_r['shutdown']){
+                            $book_btn = "<button class='btn btn-sm w-100 btn-danger shadow-none mb-2' disabled>Bookings Closed</button>";
+                        } else if(!$is_available) {
+                            $book_btn = "<button class='btn btn-sm w-100 btn-danger shadow-none mb-2' disabled>Not Available</button>";
+                        } else {
                             $login = 0;
                             if(isset($_SESSION['login']) && $_SESSION['login'] == true){
                                 $login = 1;
                             }
                             $book_btn = "<button onclick='checkLoginToBook($login, $room_data[id])' class='btn btn-sm w-100 text-white custom-bg shadow-none mb-2'>Book Now</button>";
-                        } else {
-                            $book_btn = "<button class='btn btn-sm w-100 btn-danger shadow-none mb-2' disabled>Bookings Closed</button>";
                         }
 
                         // Print the Room Card dynamically

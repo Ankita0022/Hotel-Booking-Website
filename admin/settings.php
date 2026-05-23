@@ -346,14 +346,17 @@
       xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 
       xhr.onload = function() {
-          if (this.responseText == 1) {
+          if (this.responseText == 1 && val == 0) {
               alert('success', 'Site has been shutdown!');
+          } else if (this.responseText == 1 && val == 1) {
+              alert('success', 'Shutdown mode turned off!');
           } else {
               alert('error', 'Update failed!');
           }
+          get_general();
       }
       xhr.send('upd_shutdown=' + val);
-  }
+    }
 
     function get_contacts() {
       let contacts_p_id = ['address', 'gmap', 'pn1', 'pn2','email', 'fb','insta','tw'];
